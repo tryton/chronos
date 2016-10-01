@@ -1,0 +1,32 @@
+/*
+ * This file is part of Chronos.  The LICENSE file at the top level of
+ * this repository contains the full copyright notices and license terms.
+ */
+@media screen and (min-device-width: 768px) and (max-width: 768px) {
+    body {
+        height: 520px;
+        width: 320px;
+    }
+}
+
+.navbar {
+    margin-bottom: 0px;
+}
+
+#selectEmployee {
+    height: 48px;
+    display: initial;
+    width: auto;
+}
+
+#date {
+    cursor: pointer;
+}
+
+#lines > tbody > tr {
+    cursor: pointer;
+}
+
+#lines > tbody > tr > td:first-child {
+    text-align: right;
+}

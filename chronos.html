@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!--
+    This file is part of Chronos.  The LICENSE file at the top level of
+    this repository contains the full copyright notices and license terms.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" href="chronos.css"/>
+        <link rel="manifest" href="manifest.webapp"/>
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button"
+                            class="navbar-toggle collapsed"
+                            data-toggle="collapse"
+                            data-target="#menu"
+                            aria-expanded="false"
+                            aria-controls="navbar">
+                        <span class="sr-only">Toggle menu</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a id="employee-name" class="navbar-brand" href="#">Chronos</a>
+                </div>
+                <div id="menu" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <div class="form-group">
+                                <label for="selectEmployee">Employee</label>
+                                <select id="selectEmployee" class="form-control">
+                                </select>
+                            </div>
+                        </li>
+                        <li><a href="settings.html">Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid" id="list">
+            <div class="row">
+                <h2 class="col-xs-12 text-center">
+                    <button id="previous"
+                            type="button"
+                            class="btn btn-default btn-lg"
+                            aria-label="Previous Date">
+                        <span class="glyphicon glyphicon-chevron-left"
+                              aria-hidden="true"></span>
+                    </button>
+                    <time id="date"></time>
+                    <button id="next"
+                            type="button"
+                            class="btn btn-default btn-lg"
+                            aria-label="Next Date">
+                        <span class="glyphicon glyphicon-chevron-right"
+                              aria-hidden="true"></span>
+                    </button>
+                </h2>
+            </div>
+            <div class="row">
+                <table class="col-xs-12 table table-hover table-condensed" id="lines">
+                    <thead>
+                        <tr>
+                            <th>Duration</th>
+                            <th>Work</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <button id="buttonAdd"
+                        class="btn btn-primary btn-block"
+                        type="button">Add</button>
+            </div>
+        </div>
+        <div class="container" id="form">
+            <h2 class="col-xs-12 text-center">
+                <time id="form-date"></time>
+                <a class="close" aria-label="Close" id="buttonClose">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </h2>
+            <form class="col-xs-12">
+                <input id="inputId"
+                       type="hidden"
+                       required=""></input>
+                <div class="form-group">
+                    <label class="control-label"
+                           for="inputDuration">Duration</label>
+                    <input id="inputDuration"
+                           class="form-control"
+                           type="text"
+                           required=""
+                           placeholder="00:00"></input>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"
+                            for="selectWork">Work</label>
+                    <select id="selectWork"
+                            class="form-control"
+                            required=""></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"
+                            for="inputDescription">Description</label>
+                    <input id="inputDescription"
+                           class="form-control"
+                           type="text"
+                           placeholder="Description"></select>
+                </div>
+                <button id="buttonSave"
+                        class="btn btn-lg btn-primary btn-block"
+                        type="submit">Save</button>
+                <button id="buttonDelete"
+                        class="btn btn-danger btn-block"
+                        type="button">Delete</button>
+            </form>
+        </div>
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="backend.js"></script>
+        <script src="chronos.js"></script>
+    </body>
+</html>
