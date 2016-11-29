@@ -5,6 +5,7 @@ zip -r chronos.zip \
     *.html \
     *.css \
     *.js \
+    icons/*.{png,svg} \
     bower_components/bootstrap/{LICENSE,dist} \
     bower_components/jquery/{MIT-LICENSE.txt,dist/} \
     LICENSE
