@@ -168,7 +168,7 @@ function fillLines() {
                 'class': 'description'
             }).appendTo(tr);
 
-            var duration_formated = formatDuration(this.duration)
+            var duration_formated = formatDuration(this.duration);
             time.text(duration_formated);
             time.attr('datetime', duration_formated);
             work.text(this['work.name']);
