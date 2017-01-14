@@ -223,8 +223,8 @@ function setWorks() {
     sendMessage('works', function(works) {
         selectWork.children().remove();
         jQuery.each(works, function() {
-            if ((!this.start || (this.start <= date)) &
-                    (!this.end || (this.end >= date))) {
+            if ((!this.start || (new Date(this.start) <= date)) &
+                    (!this.end || (new Date(this.end) >= date))) {
                 selectWork.append(
                         jQuery('<option/>').val(this.id).text(this.name));
             }
