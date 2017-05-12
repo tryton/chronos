@@ -196,7 +196,7 @@ function parseDuration(text) {
     if (!duration) {
         var matches = text.match(/(\d*)(:(\d*)(:(\d*)(.(\d+))?)?)?/);
         if (matches) {
-            duration = parseInt(matches[1]) * 60 * 60;  // hours
+            duration = parseInt(matches[1] || 0) * 60 * 60;  // hours
             duration += parseInt(matches[3] || 0) * 60;  // minutes
             duration += parseInt(matches[5] || 0);  // seconds
             duration += parseFloat(matches[6] || 0);  // milliseconds
