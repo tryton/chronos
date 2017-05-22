@@ -188,13 +188,16 @@ function deleteLine(date, id) {
     syncLines();
 }
 
+var promises = [];
+
 function syncLines() {
     var url = localStorage.getItem('url');
     var db = localStorage.getItem('db');
     var key = localStorage.getItem('key');
     var employee = localStorage.getItem('employee');
 
-    if (!(url && db && key) || navigator.offline) {
+    if (!(url && db && key) || navigator.offline ||
+        !jQuery.isEmptyObject(promises)) {
         return;
     }
 
@@ -203,7 +206,6 @@ function syncLines() {
     var lines_all = JSON.parse(localStorage.getItem('lines')) || {};
     for (var date in lines_all) {
         var lines = lines_all[date];
-        var promises = []
         for (var i = 0; i < lines.length; i++) {
             var line = lines[i];
             if (line.deleted) {
@@ -216,6 +218,7 @@ function syncLines() {
                     'duration': line.duration,
                     'description': line.description
                 };
+                line.dirty = false;
                 if (line.id < 0) {
                     promises.push(create(date, line.id, values));
                 }  else {
@@ -228,6 +231,10 @@ function syncLines() {
             clear(date);
         }
     }
+    localStorage.setItem('lines', JSON.stringify(lines_all));
+    jQuery.when.apply(jQuery, promises).always(function() {
+        promises.splice(0, promises.length);
+    });
 
     function delete_(date, id) {
         return jQuery.ajax({
@@ -277,7 +284,11 @@ function syncLines() {
             var cur = lines[i];
             if (cur.id == id) {
                 if (line) {
-                    lines.splice(i, 1, line);
+                    if (line.dirty) {
+                        cur.id = line.id;
+                    } else {
+                        lines.splice(i, 1, line);
+                    }
                 } else {
                     lines.splice(i, 1);
                 }
