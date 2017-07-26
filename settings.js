@@ -80,8 +80,8 @@ function register() {
             localStorage.setItem('key', data);
             window.location.href = "key.html";
         })
-        .fail(function() {
-            alert('error');
+        .fail(function(request, status, error) {
+            alert(error);
         }).always(function() {
             initialize();
         });
