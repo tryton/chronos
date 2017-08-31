@@ -14,7 +14,7 @@
         ]
     },
     "browser_action": {
-        "browser_style": true,
+        "browser_style": false,
         "default_icon": {
             "16": "icons/chronos-16.png",
             "19": "icons/chronos-19.png",
