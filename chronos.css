@@ -4,14 +4,13 @@
  */
 @media screen and (min-device-width: 768px) and (max-width: 768px) {
     body {
-        height: 520px;
-        width: 320px;
+        height: 600px;
+        width: 400px;
     }
 }
 
 body {
     padding-top: 50px;
-    padding-bottom: 34px;
 }
 
 .navbar {
@@ -22,13 +21,6 @@ body {
     height: 48px;
     display: initial;
     width: auto;
-}
-
-#list > .row:last-child {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 34px;
 }
 
 #date {
