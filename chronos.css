@@ -35,3 +35,8 @@ body {
 #lines > tfoot > tr > th:first-child {
     text-align: right;
 }
+
+#lines td {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
