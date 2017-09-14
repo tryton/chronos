@@ -12,4 +12,6 @@ zip -r chronos.zip \
     bower_components/bootstrap/dist/fonts/ \
     bower_components/jquery/LICENSE.txt \
     bower_components/jquery/dist/jquery.min.js \
+    bower_components/mousetrap/LICENSE  \
+    bower_components/mousetrap/mousetrap.min.js \
     LICENSE

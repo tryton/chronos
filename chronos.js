@@ -28,6 +28,18 @@ buttonPrevious.click(previousDate);
 buttonNext.click(nextDate);
 date.click(todayDate);
 tableLines.on('click', 'tbody > tr', editLine);
+tableLines.on('keypress', 'tbody > tr', function(e) {
+    if (e.which == 13) {
+        editLine.call(this);
+        return false;
+    }
+});
+tableLines.on('focusin', 'tbody > tr', function() {
+    jQuery(this).addClass('active');
+});
+tableLines.on('focusout', 'tbody > tr', function() {
+    jQuery(this).removeClass('active');
+});
 buttonAdd.click(add);
 divForm.find('form').submit(submit);
 inputDuration.change(validateDuration);
@@ -64,12 +76,25 @@ function initialize() {
 function switchList() {
     divList.show();
     divForm.hide();
+    var id = inputId.val();
+    if (id) {
+        divList.find('#' + inputId.val()).focus();
+    }
+    Mousetrap.unbind(["esc", "del"]);
+    Mousetrap.bind("a", add);
+    Mousetrap.bind("h", previousDate);
+    Mousetrap.bind("l", nextDate);
+    Mousetrap.bind("j", previousLine);
+    Mousetrap.bind("k", nextLine);
 }
 
 function switchForm() {
     divList.hide();
     divForm.show();
     inputDuration.focus();
+    Mousetrap.unbind(["a", "h", "l", "j", "k"]);
+    Mousetrap.bind("esc", close);
+    Mousetrap.bind("del", delete_);
 }
 
 function initEmployees() {
@@ -158,7 +183,8 @@ function fillLines() {
                 return;
             }
             var tr = jQuery('<tr/>', {
-                'id': this.id
+                'id': this.id,
+                'tabindex': 0,
             }).appendTo(bodyLines);
             var duration = jQuery('<td/>').appendTo(tr);
             var time = jQuery('<time/>').appendTo(duration);
@@ -241,6 +267,31 @@ function editLine() {
     var description = tr.find('.description').text();
     setForm(id, duration, work, description);
     switchForm();
+}
+
+function previousLine() {
+    selectLine('previous');
+}
+
+function nextLine() {
+    selectLine('next');
+}
+
+function selectLine(direction) {
+    var line = divList.find('tbody > tr:focus');
+    if (line.length) {
+        if (direction === 'previous') {
+            line = line.next('tr');
+        } else {
+            line = line.prev('tr');
+        }
+    } else {
+        line = divList.find('tbody > tr:first');
+    }
+    if (line.length) {
+        line.focus();
+        window.scrollTo(0, line.offset().top);
+    }
 }
 
 function add() {
