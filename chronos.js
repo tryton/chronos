@@ -11,6 +11,7 @@ var buttonPrevious = jQuery(document).find('#previous');
 var buttonNext = jQuery(document).find('#next');
 var tableLines = jQuery(document).find('#lines');
 var bodyLines = tableLines.find('tbody');
+var footLines = tableLines.find('tfoot');
 var buttonAdd = jQuery(document).find('#buttonAdd');
 
 var divForm = jQuery(document).find('#form');
@@ -178,6 +179,7 @@ function fillLines() {
     bodyLines.children().remove();
     var message = ['lines', date.attr('datetime')];
     sendMessage(message, function(lines) {
+        var total = 0;
         jQuery.each(lines, function() {
             if (this.deleted) {
                 return;
@@ -186,13 +188,17 @@ function fillLines() {
                 'id': this.id,
                 'tabindex': 0,
             }).appendTo(bodyLines);
-            var duration = jQuery('<td/>').appendTo(tr);
+            var duration = jQuery('<td/>', {
+                'headers': 'duration',
+            }).appendTo(tr);
             var time = jQuery('<time/>').appendTo(duration);
             var work = jQuery('<td/>', {
-                'class': 'work'
+                'class': 'work',
+                'headers': 'work',
             }).appendTo(tr);
             var description = jQuery('<td/>', {
-                'class': 'description'
+                'class': 'description',
+                'headers': 'description',
             }).appendTo(tr);
 
             var duration_formated = formatDuration(this.duration);
@@ -201,7 +207,11 @@ function fillLines() {
             work.text(this['work.name']);
             work.attr('work', this.work);
             description.text(this.description);
+            total += this.duration;
         });
+        var total_formated = formatDuration(total);
+        footLines.find('time').text(total_formated)
+            .attr('datetime', total_formated);
     });
 }
 

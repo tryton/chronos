@@ -39,6 +39,7 @@ body {
     cursor: pointer;
 }
 
-#lines > tbody > tr > td:first-child {
+#lines > tbody > tr > td:first-child,
+#lines > tfoot > tr > th:first-child {
     text-align: right;
 }
