@@ -290,7 +290,10 @@ function selectLine(direction) {
     }
     if (line.length) {
         line.focus();
-        window.scrollTo(0, line.offset().top);
+        var body = jQuery('body');
+        window.scrollTo(0, line.offset().top -
+            (body.height() / 2) +
+            parseInt(body.css('padding-top')));
     }
 }
 
