@@ -69,6 +69,7 @@ function switchList() {
 function switchForm() {
     divList.hide();
     divForm.show();
+    inputDuration.focus();
 }
 
 function initEmployees() {
