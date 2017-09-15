@@ -74,6 +74,13 @@ function initialize() {
     }
 }
 
+function _returnFalse(func) {
+    return function() {
+        func.call(arguments);
+        return false;
+    };
+}
+
 function switchList() {
     divList.show();
     divForm.hide();
@@ -82,11 +89,11 @@ function switchList() {
         divList.find('#' + inputId.val()).focus();
     }
     Mousetrap.unbind(["esc", "del"]);
-    Mousetrap.bind("a", add);
-    Mousetrap.bind("h", previousDate);
-    Mousetrap.bind("l", nextDate);
-    Mousetrap.bind("j", previousLine);
-    Mousetrap.bind("k", nextLine);
+    Mousetrap.bind("a", _returnFalse(add));
+    Mousetrap.bind("h", _returnFalse(previousDate));
+    Mousetrap.bind("l", _returnFalse(nextDate));
+    Mousetrap.bind("j", _returnFalse(previousLine));
+    Mousetrap.bind("k", _returnFalse(nextLine));
 }
 
 function switchForm() {
@@ -94,8 +101,8 @@ function switchForm() {
     divForm.show();
     inputDuration.focus();
     Mousetrap.unbind(["a", "h", "l", "j", "k"]);
-    Mousetrap.bind("esc", close);
-    Mousetrap.bind("del", delete_);
+    Mousetrap.bind("esc", _returnFalse(close));
+    Mousetrap.bind("del", _returnFalse(delete_));
 }
 
 function initEmployees() {
