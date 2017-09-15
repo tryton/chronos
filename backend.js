@@ -148,10 +148,11 @@ function getLines(date) {
 function updateLine(date, id, values) {
     var lines_all = JSON.parse(localStorage.getItem('lines')) || {};
     var lines = lines_all[date] || [];
+    var line;
     values.dirty = true;
     var min = 0;
     for (var i = 0; i < lines.length; i++) {
-        var line = lines[i];
+        line = lines[i];
         if (line.id === id) {
             jQuery.extend(line, values);
             break;
@@ -159,7 +160,7 @@ function updateLine(date, id, values) {
         min = Math.min(min, line.id);
     }
     if (!id) {
-        var line = {'id': --min};
+        line = {'id': --min};
         lines.push(jQuery.extend(line, values));
     }
     lines_all[date] = lines;
@@ -201,7 +202,7 @@ function syncLines() {
         return;
     }
 
-    var url = sanitizeURL(url + '/' + db + '/timesheet/line');
+    url = sanitizeURL(url + '/' + db + '/timesheet/line');
 
     var lines_all = JSON.parse(localStorage.getItem('lines')) || {};
     for (var date in lines_all) {
