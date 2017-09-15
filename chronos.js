@@ -89,6 +89,7 @@ function switchList() {
         divList.find('#' + inputId.val()).focus();
     }
     Mousetrap.unbind(["esc", "ctrl+d"]);
+    Mousetrap.bind("=", _returnFalse(todayDate));
     Mousetrap.bind("a", _returnFalse(add));
     Mousetrap.bind("h", _returnFalse(previousDate));
     Mousetrap.bind("l", _returnFalse(nextDate));
@@ -101,7 +102,7 @@ function switchForm() {
     divList.hide();
     divForm.show();
     inputDuration.focus();
-    Mousetrap.unbind(["a", "h", "l", "j", "k", "ctrl+d"]);
+    Mousetrap.unbind(["=", "a", "h", "l", "j", "k", "ctrl+d"]);
     Mousetrap.bind("esc", _returnFalse(close));
     Mousetrap.bind("ctrl+d", _returnFalse(deleteForm));
 }
