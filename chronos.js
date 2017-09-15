@@ -46,7 +46,7 @@ divForm.find('form').submit(submit);
 inputDuration.change(validateDuration);
 buttonClose.click(close);
 buttonSave.click(save);
-buttonDelete.click(delete_);
+buttonDelete.click(deleteForm);
 
 var sendMessage;
 try {
@@ -88,21 +88,22 @@ function switchList() {
     if (id) {
         divList.find('#' + inputId.val()).focus();
     }
-    Mousetrap.unbind(["esc", "del"]);
+    Mousetrap.unbind(["esc", "ctrl+d"]);
     Mousetrap.bind("a", _returnFalse(add));
     Mousetrap.bind("h", _returnFalse(previousDate));
     Mousetrap.bind("l", _returnFalse(nextDate));
     Mousetrap.bind("j", _returnFalse(previousLine));
     Mousetrap.bind("k", _returnFalse(nextLine));
+    Mousetrap.bind("ctrl+d", _returnFalse(deleteList));
 }
 
 function switchForm() {
     divList.hide();
     divForm.show();
     inputDuration.focus();
-    Mousetrap.unbind(["a", "h", "l", "j", "k"]);
+    Mousetrap.unbind(["a", "h", "l", "j", "k", "ctrl+d"]);
     Mousetrap.bind("esc", _returnFalse(close));
-    Mousetrap.bind("del", _returnFalse(delete_));
+    Mousetrap.bind("ctrl+d", _returnFalse(deleteForm));
 }
 
 function initEmployees() {
@@ -367,9 +368,18 @@ function save(evt) {
     });
 }
 
-function delete_() {
-    var date = formDate.attr('datetime');
-    var id = parseInt(inputId.val());
+function deleteForm() {
+    delete_(parseInt(inputId.val()), formDate.attr('datetime'));
+}
+
+function deleteList() {
+    var line = divList.find('tbody > tr:focus');
+    if (line.length) {
+        delete_(parseInt(line.attr('id')), date.attr('datetime'));
+    }
+}
+
+function delete_(id, date) {
     sendMessage(['delete line', date, id], function() {
         fillLines();
         switchList();
