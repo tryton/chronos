@@ -189,7 +189,7 @@ function deleteLine(date, id) {
     syncLines();
 }
 
-var promises = [];
+var syncLock = false;
 
 function syncLines() {
     var url = localStorage.getItem('url');
@@ -197,21 +197,27 @@ function syncLines() {
     var key = localStorage.getItem('key');
     var employee = localStorage.getItem('employee');
 
-    if (!(url && db && key) || navigator.offline ||
-        !jQuery.isEmptyObject(promises)) {
+    if (!(url && db && key) || navigator.offline || syncLock) {
         return;
     }
+    syncLock = true;
 
     url = sanitizeURL(url + '/' + db + '/timesheet/line');
-
+    var to_delete = [],
+        to_create = [],
+        to_update = [],
+        to_clear = [];
     var lines_all = JSON.parse(localStorage.getItem('lines')) || {};
     for (var date in lines_all) {
         var lines = lines_all[date];
+        var clearable = true;
         for (var i = 0; i < lines.length; i++) {
             var line = lines[i];
             if (line.deleted) {
-                promises.push(delete_(date, line.id));
-            } else if (line.dirty) {
+                clearable = false;
+                to_delete.push([date, line.id]);
+            } else if (line.dirty || line.id < 0) {
+                clearable = false;
                 var values = {
                     'employee': employee,
                     'date': date,
@@ -221,20 +227,33 @@ function syncLines() {
                 };
                 line.dirty = false;
                 if (line.id < 0) {
-                    promises.push(create(date, line.id, values));
-                }  else {
-                    promises.push(update(date, line.id, values));
+                    to_create.push([date, line.id, values]);
+                } else {
+                    to_update.push([date, line.id, values]);
                 }
             }
         }
-        if (jQuery.isEmptyObject(promises) &&
+        if (clearable &&
                 (Math.abs(new Date() - new Date(date)) > cache_lifetime)) {
-            clear(date);
+            to_clear.push(date);
         }
     }
     localStorage.setItem('lines', JSON.stringify(lines_all));
+    to_clear.forEach(clear);
+
+    var promises = [];
+    [[to_delete, delete_], [to_create, create], [to_update, update]]
+        .forEach(function(e) {
+            var array = e[0],
+                method = e[1];
+            for (var i = 0; i < array.length; i++) {
+                var args = array[i];
+                promises.push(method.apply(null, args));
+            }
+        });
+
     jQuery.when.apply(jQuery, promises).always(function() {
-        promises.splice(0, promises.length);
+        syncLock = false;
     });
 
     function delete_(date, id) {
