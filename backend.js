@@ -107,12 +107,16 @@ function getLines(date) {
     var lines = JSON.parse(localStorage.getItem('lines')) || {};
     var lines_date = JSON.parse(localStorage.getItem('lines_date')) || {};
     var cache_date = new Date(lines_date[date]);
+    var unsaved = (lines[date] || []).filter(function(line) {
+        return line.dirty || (line.id < 0);
+    });
 
     if (!(url && db && key && employee)) {
         return jQuery.when([]);
     }
     if ((navigator.offline) ||
-           ((new Date() - cache_date) < cache_timeout)) {
+        ((new Date() - cache_date) < cache_timeout) ||
+        unsaved.length) {
         return jQuery.when(lines[date] || []);
     }
 
@@ -134,7 +138,9 @@ function getLines(date) {
             var unsaved = (lines_all[date] || []).filter(function(line) {
                 return line.dirty || (line.id < 0);
             });
-            lines = jQuery.extend(lines, unsaved);
+            if (unsaved.length) {
+                return lines_all[date];
+            }
             lines_all[date] = lines;
             lines_date[date] = new Date();
             localStorage.setItem('lines', JSON.stringify(lines_all));
