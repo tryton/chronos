@@ -23,6 +23,7 @@ var inputDescription = jQuery(document).find('#inputDescription');
 var buttonClose = jQuery(document).find('#buttonClose');
 var buttonSave = jQuery(document).find('#buttonSave');
 var buttonDelete = jQuery(document).find('#buttonDelete');
+var _currentDate = new Date();
 
 selectEmployee.change(changeEmployee);
 buttonPrevious.click(previousDate);
@@ -160,12 +161,13 @@ function setDate(current) {
             (month < 10 ? "0" + month : month) + "-" +
             (day < 10 ? "0" + day : day));
     date.text(current.toLocaleDateString());
+    _currentDate = current;
     fillLines();
     setWorks();
 }
 
 function currentDate() {
-    return new Date(date.attr('datetime'));
+    return _currentDate;
 }
 
 function previousDate() {
