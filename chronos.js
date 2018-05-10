@@ -160,12 +160,13 @@ function setDate(current) {
             (month < 10 ? "0" + month : month) + "-" +
             (day < 10 ? "0" + day : day));
     date.text(current.toLocaleDateString());
+    date.data('date', current);
     fillLines();
     setWorks();
 }
 
 function currentDate() {
-    return new Date(date.attr('datetime'));
+    return date.data('date');
 }
 
 function previousDate() {
@@ -265,12 +266,14 @@ function validateDuration() {
 
 
 function setWorks() {
-    var date = currentDate();
+    var current = new Date(date.attr('datetime')).setHours(0, 0, 0, 0);
     sendMessage('works', function(works) {
         selectWork.children().remove();
         jQuery.each(works, function() {
-            if ((!this.start || (new Date(this.start) <= date)) &
-                    (!this.end || (new Date(this.end) >= date))) {
+            if ((!this.start ||
+                (new Date(this.start).setHours(0, 0, 0, 0) <= current)) &
+                (!this.end ||
+                    (new Date(this.end).setHours(0, 0, 0, 0) >= current))) {
                 selectWork.append(
                         jQuery('<option/>').val(this.id).text(this.name));
             }
