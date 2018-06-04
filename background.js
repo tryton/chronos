@@ -12,7 +12,7 @@ function dispatchMessage(message, sender, sendResponse) {
 chrome.runtime.onMessage.addListener(dispatchMessage);
 
 function dispatchAlarm(alarm) {
-    syncLines();
+    runWithLock(lock, syncLines);
 }
 
 chrome.alarms.onAlarm.addListener(dispatchAlarm);

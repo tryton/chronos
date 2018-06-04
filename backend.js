@@ -5,6 +5,7 @@
 const cache_lifetime = 10 * 24 * 60 * 60 * 1000;
 const cache_timeout = 60 * 60 * 1000;
 const sync_delay_timeout = 5 * 60 * 1000;
+const lock = '_lock';
 
 function sanitizeURL(url) {
     return url.replace(/([^:]\/)\/+/g, "$1");
@@ -21,12 +22,60 @@ function dispatch(message, callback) {
         getLines(message[1]).always(callback);
         return true;
     } else if (message[0] == 'update line') {
-        callback(updateLine(message[1], message[2], message[3]));
+        runWithLock(lock, function() {
+            callback(updateLine(message[1], message[2], message[3]));
+        });
         return;
     } else if (message[0] == 'delete line') {
-        callback(deleteLine(message[1], message[2]));
+        runWithLock(lock, function() {
+            callback(deleteLine( message[1], message[2]));
+        });
         return;
     }
+}
+
+function runWithLock(key, fn, timeout, checkTime) {
+    var timer = function() {
+        window.setTimeout(runWithLock.bind(null, key, fn, timeout, checkTime), checkTime);
+    };
+    if (!timeout) {
+        timeout = 10000;
+    }
+    if (!checkTime) {
+        checkTime = 100;
+    }
+    var result = localStorage.getItem(key);
+    if (result) {
+        var data = JSON.parse(result);
+        if (data.time >= Date.now() - timeout) {
+            timer();
+            return;
+        } else {
+            localStorage.removeItem(key);
+        }
+    }
+    var id = Math.random();
+    localStorage.setItem(key, JSON.stringify({id: id, time: Date.now()}));
+    window.setTimeout(function() {
+        var result = localStorage.getItem(key);
+        var data = JSON.parse(result);
+        if (data.id !== id) {
+            timer();
+            return;
+        }
+        var response;
+        try {
+            response = fn();
+        } finally {
+            if (response) {
+                response.then(function() {
+                    localStorage.removeItem(key);
+                });
+            } else {
+                localStorage.removeItem(key);
+            }
+        }
+    }, 10);
 }
 
 function updateEmployees() {
@@ -195,18 +244,15 @@ function deleteLine(date, id) {
     syncLines();
 }
 
-var syncLock = false;
-
 function syncLines() {
     var url = localStorage.getItem('url');
     var db = localStorage.getItem('db');
     var key = localStorage.getItem('key');
     var employee = localStorage.getItem('employee');
 
-    if (!(url && db && key) || navigator.offline || syncLock) {
+    if (!(url && db && key) || navigator.offline) {
         return;
     }
-    syncLock = true;
 
     url = sanitizeURL(url + '/' + db + '/timesheet/line');
     var to_delete = [],
@@ -257,10 +303,6 @@ function syncLines() {
                 promises.push(method.apply(null, args));
             }
         });
-
-    jQuery.when.apply(jQuery, promises).always(function() {
-        syncLock = false;
-    });
 
     function delete_(date, id) {
         return jQuery.ajax({
@@ -333,14 +375,17 @@ function syncLines() {
         localStorage.setItem('lines', JSON.stringify(lines));
         localStorage.setItem('lines_date', JSON.stringify(lines_date));
     }
+    return jQuery.when.apply(jQuery, promises);
 }
 
 try {
     chrome;
 } catch(err) {
     function sync() {
-        syncLines();
-        window.setTimeout(sync, sync_delay_timeout);
+        runWithLock(lock, function() {
+            syncLines();
+            window.setTimeout(sync, sync_delay_timeout);
+        });
     }
     sync();
 }
