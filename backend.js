@@ -61,6 +61,10 @@ function runWithLock(key, fn, timeout, checkTime) {
     localStorage.setItem(key, JSON.stringify({id: id, time: Date.now()}));
     window.setTimeout(function() {
         var result = localStorage.getItem(key);
+        if (!result) {
+            timer();
+            return;
+        }
         var data = JSON.parse(result);
         if (data.id !== id) {
             timer();
