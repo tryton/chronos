@@ -316,7 +316,7 @@ function syncLines() {
             },
             'contentType': 'application/json',
             'type': 'DELETE'})
-            .done(function() {
+            .then(function() {
                 store(date, id);
             });
     }
