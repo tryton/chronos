@@ -338,10 +338,23 @@ function submit(evt) {
 }
 
 function close() {
-    switchList();
+    if (!buttonClose.prop('disabled')) {
+        switchList();
+    }
 }
 
+function disable() {
+    divForm.find('input,select,button,a').prop('disabled', true);
+}
+
+function enable() {
+    divForm.find('input,select,button,a').prop('disabled', false);
+}
+
+
 function save(evt) {
+    buttonSave.button('saving');
+    disable();
     inputDuration.parent().removeClass('has-error');
     selectWork.parent().removeClass('has-error');
 
@@ -369,6 +382,8 @@ function save(evt) {
     sendMessage(['update line', date, id, values], function() {
         fillLines();
         switchList();
+        buttonSave.button('reset');
+        enable();
     });
 }
 
@@ -384,8 +399,12 @@ function deleteList() {
 }
 
 function delete_(id, date) {
+    buttonDelete.button('deleting');
+    disable();
     sendMessage(['delete line', date, id], function() {
         fillLines();
         switchList();
+        buttonDelete.button('reset');
+        enable();
     });
 }
