@@ -183,19 +183,21 @@ function getLines(date) {
         'contentType': 'application/json',
         'type': 'GET'})
         .then(function(lines) {
-            var lines_all = JSON.parse(localStorage.getItem('lines')) || {};
-            var lines_date = JSON.parse(
-                    localStorage.getItem('lines_date')) || {};
-            var unsaved = (lines_all[date] || []).filter(function(line) {
-                return line.dirty || (line.id < 0);
+            runWithLock(lock, function() {
+                var lines_all = JSON.parse(localStorage.getItem('lines')) || {};
+                var lines_date = JSON.parse(
+                        localStorage.getItem('lines_date')) || {};
+                var unsaved = (lines_all[date] || []).filter(function(line) {
+                    return line.dirty || (line.id < 0);
+                });
+                if (unsaved.length) {
+                    return lines_all[date];
+                }
+                lines_all[date] = lines;
+                lines_date[date] = new Date();
+                localStorage.setItem('lines', JSON.stringify(lines_all));
+                localStorage.setItem('lines_date', JSON.stringify(lines_date));
             });
-            if (unsaved.length) {
-                return lines_all[date];
-            }
-            lines_all[date] = lines;
-            lines_date[date] = new Date();
-            localStorage.setItem('lines', JSON.stringify(lines_all));
-            localStorage.setItem('lines_date', JSON.stringify(lines_date));
             return lines;
         }, function() {
             return lines[date] || [];
