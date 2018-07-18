@@ -24,11 +24,13 @@ function dispatch(message, callback) {
     } else if (message[0] == 'update line') {
         runWithLock(lock, function() {
             callback(updateLine(message[1], message[2], message[3]));
+            return syncLines();
         });
         return;
     } else if (message[0] == 'delete line') {
         runWithLock(lock, function() {
-            callback(deleteLine( message[1], message[2]));
+            callback(deleteLine(message[1], message[2]));
+            return syncLines();
         });
         return;
     }
@@ -220,8 +222,6 @@ function updateLine(date, id, values) {
     }
     lines_all[date] = lines;
     localStorage.setItem('lines', JSON.stringify(lines_all));
-
-    syncLines();
 }
 
 function deleteLine(date, id) {
@@ -240,8 +240,6 @@ function deleteLine(date, id) {
     }
     lines_all[date] = lines;
     localStorage.setItem('lines', JSON.stringify(lines_all));
-
-    syncLines();
 }
 
 function syncLines() {
@@ -383,8 +381,9 @@ try {
 } catch(err) {
     function sync() {
         runWithLock(lock, function() {
-            syncLines();
-            window.setTimeout(sync, sync_delay_timeout);
+            return syncLines().always(function() {
+                window.setTimeout(sync, sync_delay_timeout);
+            });
         });
     }
     sync();
