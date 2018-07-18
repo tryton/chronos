@@ -75,7 +75,7 @@ function runWithLock(key, fn, timeout, checkTime) {
             response = fn();
         } finally {
             if (response) {
-                response.then(function() {
+                response.always(function() {
                     localStorage.removeItem(key);
                 });
             } else {
