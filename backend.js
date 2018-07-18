@@ -41,7 +41,7 @@ function runWithLock(key, fn, timeout, checkTime) {
         window.setTimeout(runWithLock.bind(null, key, fn, timeout, checkTime), checkTime);
     };
     if (!timeout) {
-        timeout = 10000;
+        timeout = 30000;
     }
     if (!checkTime) {
         checkTime = 100;
@@ -53,6 +53,7 @@ function runWithLock(key, fn, timeout, checkTime) {
             timer();
             return;
         } else {
+            console.error('lock timeout');
             localStorage.removeItem(key);
         }
     }
