@@ -277,7 +277,6 @@ function syncLines() {
                     'duration': line.duration,
                     'description': line.description
                 };
-                line.dirty = false;
                 if (line.id < 0) {
                     to_create.push([date, line.id, values]);
                 } else {
@@ -352,11 +351,7 @@ function syncLines() {
             var cur = lines[i];
             if (cur.id == id) {
                 if (line) {
-                    if (line.dirty) {
-                        cur.id = line.id;
-                    } else {
-                        lines.splice(i, 1, line);
-                    }
+                    lines.splice(i, 1, line);
                 } else {
                     lines.splice(i, 1);
                 }
