@@ -371,6 +371,7 @@ function save(evt) {
         if (!work) {
             selectWork.parent().addClass('has-error');
         }
+        enable();
         return;
     }
     var values = {
