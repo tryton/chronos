@@ -11,6 +11,13 @@ function sanitizeURL(url) {
     return url.replace(/([^:]\/)\/+/g, "$1");
 }
 
+function uuid4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
 function dispatch(message, callback) {
     if (message == 'employees') {
         updateEmployees().always(callback);
@@ -225,6 +232,7 @@ function updateLine(date, id, values) {
     }
     if (!id) {
         line = {'id': --min};
+        values.uuid = uuid4();
         lines.push(jQuery.extend(line, values));
     }
     lines_all[date] = lines;
@@ -275,13 +283,10 @@ function syncLines() {
                 to_delete.push([date, line.id]);
             } else if (line.dirty || line.id < 0) {
                 clearable = false;
-                var values = {
+                var values = Object.assign({
                     'employee': employee,
                     'date': date,
-                    'work': line.work,
-                    'duration': line.duration,
-                    'description': line.description
-                };
+                }, line);
                 if (line.id < 0) {
                     to_create.push([date, line.id, values]);
                 } else {
