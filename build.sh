@@ -5,7 +5,7 @@ zip -r chronos.zip \
     *.html \
     *.css \
     *.js \
-    icons/*.{png,svg} \
+    icons/*.svg \
     bower_components/bootstrap/LICENSE \
     bower_components/bootstrap/dist/js/bootstrap.min.js \
     bower_components/bootstrap/dist/css/bootstrap.min.css \
