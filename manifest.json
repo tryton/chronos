@@ -32,7 +32,7 @@
     "commands": {
         "_execute_browser_action": {
             "suggested_key": {
-                "default": "Ctrl+Alt+T"
+                "default": "Alt+I"
             }
         }
     },
