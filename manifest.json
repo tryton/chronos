@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Chronos",
-    "version": "0.7.4",
+    "version": "0.7.5",
     "description": "Manage timesheets in Tryton",
     "icons": {
         "48": "icons/chronos.svg",
