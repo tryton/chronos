@@ -4,8 +4,9 @@
     "version": "0.7.5",
     "description": "Manage timesheets in Tryton",
     "icons": {
-        "48": "icons/chronos.svg",
-        "96": "icons/chronos.svg"
+        "16": "icons/chronos-16.png",
+        "48": "icons/chronos-48.png",
+        "128": "icons/chronos-128.png"
     },
     "background": {
         "scripts": [
@@ -16,7 +17,11 @@
     },
     "browser_action": {
         "browser_style": false,
-        "default_icon": "icons/chronos.svg",
+        "default_icon": {
+            "16": "icons/chronos-16.png",
+            "48": "icons/chronos-48.png",
+            "128": "icons/chronos-128.png"
+        },
         "default_popup": "chronos.html",
         "default_title": "Enter timesheet",
         "theme_icons": [{
