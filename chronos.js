@@ -371,6 +371,7 @@ function save(evt) {
         if (!work) {
             selectWork.parent().addClass('has-error');
         }
+        buttonSave.button('reset');
         enable();
         return;
     }
