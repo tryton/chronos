@@ -16,6 +16,7 @@
   "dependencies": {
     "jquery": "^3",
     "bootstrap": "^3.3.7",
-    "mousetrap": "^1.6.1"
+    "mousetrap": "^1.6.1",
+    "bootstrap-select": "^1.13.11"
   }
 }

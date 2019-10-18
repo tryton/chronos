@@ -269,6 +269,9 @@ function setWorks() {
     var current = new Date(date.attr('datetime')).setHours(0, 0, 0, 0);
     sendMessage('works', function(works) {
         selectWork.children().remove();
+        // Add an empty option to prevent bootstrap-select
+        // from setting the first one
+        selectWork.append('<option/>');
         jQuery.each(works, function() {
             if ((!this.start ||
                 (new Date(this.start).setHours(0, 0, 0, 0) <= current)) &
@@ -278,6 +281,7 @@ function setWorks() {
                         jQuery('<option/>').val(this.id).text(this.name));
             }
         });
+        selectWork.selectpicker('refresh');
     });
 }
 
@@ -329,7 +333,7 @@ function setForm(id, duration, work, description) {
     formDate.attr('datetime', date.attr('datetime'));
     inputId.val(id);
     inputDuration.val(duration);
-    selectWork.val(work);
+    selectWork.selectpicker('val', work || '');
     inputDescription.val(description);
 }
 

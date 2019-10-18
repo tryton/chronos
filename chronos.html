@@ -8,6 +8,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css"/>
         <link rel="stylesheet" href="chronos.css"/>
         <link rel="manifest" href="manifest.webapp"/>
     </head>
@@ -112,7 +113,8 @@
                     <label class="control-label"
                             for="selectWork">Work</label>
                     <select id="selectWork"
-                            class="form-control mousetrap"
+                            class="form-control mousetrap selectpicker"
+                            data-live-search="true"
                             required=""></select>
                 </div>
                 <div class="form-group">
@@ -136,6 +138,7 @@
         </div>
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
         <script src="bower_components/mousetrap/mousetrap.js"></script>
         <script src="backend.js"></script>
         <script src="chronos.js"></script>
