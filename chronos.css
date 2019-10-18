@@ -27,6 +27,14 @@ body {
     cursor: pointer;
 }
 
+#lines {
+    table-layout: fixed;
+}
+
+#duration {
+    width: 20%;
+}
+
 #lines > tbody > tr {
     cursor: pointer;
 }
@@ -37,6 +45,7 @@ body {
 }
 
 #lines td {
-    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
