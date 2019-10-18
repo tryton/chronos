@@ -147,6 +147,8 @@ function initEmployees() {
         var employee = getEmployee();
         if (employee) {
             selectEmployee.val(employee);
+        } else if (employees.length === 1) {
+            selectEmployee.val(employees[0]);
         }
         setEmployee();
     });
