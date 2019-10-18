@@ -12,7 +12,11 @@ var buttonNext = jQuery(document).find('#next');
 var tableLines = jQuery(document).find('#lines');
 var bodyLines = tableLines.find('tbody');
 var footLines = tableLines.find('tfoot');
+var counter = jQuery(document).find('#counter');
+var buttons = jQuery(document).find('#buttons');
+var buttonStart = jQuery(document).find('#buttonStart');
 var buttonAdd = jQuery(document).find('#buttonAdd');
+var buttonStop = jQuery(document).find('#buttonStop');
 
 var divForm = jQuery(document).find('#form');
 var formDate = jQuery(document).find('#form-date');
@@ -41,7 +45,9 @@ tableLines.on('focusin', 'tbody > tr', function() {
 tableLines.on('focusout', 'tbody > tr', function() {
     jQuery(this).removeClass('active');
 });
+buttonStart.click(start);
 buttonAdd.click(add);
+buttonStop.click(stop);
 divForm.find('form').submit(submit);
 inputDuration.change(validateDuration);
 buttonClose.click(close);
@@ -59,6 +65,7 @@ try {
 }
 
 initialize();
+setInterval(refreshCounter, 1000);
 
 function initialize() {
     initEmployees();
@@ -84,6 +91,8 @@ function _returnFalse(func) {
 function switchList() {
     divList.show();
     divForm.hide();
+    refreshCounter();
+
     var id = inputId.val();
     if (id) {
         divList.find('#' + inputId.val()).focus();
@@ -91,6 +100,7 @@ function switchList() {
     Mousetrap.unbind(["esc", "ctrl+d"]);
     Mousetrap.bind("=", _returnFalse(todayDate));
     Mousetrap.bind("a", _returnFalse(add));
+    Mousetrap.bind("s", _returnFalse(toggleCounter));
     Mousetrap.bind("h", _returnFalse(previousDate));
     Mousetrap.bind("l", _returnFalse(nextDate));
     Mousetrap.bind("j", _returnFalse(previousLine));
@@ -98,11 +108,31 @@ function switchList() {
     Mousetrap.bind("ctrl+d", _returnFalse(deleteList));
 }
 
+function refreshCounter() {
+    var duration = counterDuration();
+    if (duration !== null) {
+        counter.show();
+        buttons.hide();
+        counter.find('time').text(formatDuration(duration, false));
+    } else {
+        counter.hide();
+        buttons.show();
+    }
+}
+
+function counterDuration() {
+    var origin = localStorage.getItem('counter');
+    if (origin) {
+        return Math.floor((new Date().getTime() - origin) / 1000);
+    }
+    return null;
+}
+
 function switchForm() {
     divList.hide();
     divForm.show();
     inputDuration.focus();
-    Mousetrap.unbind(["=", "a", "h", "l", "j", "k", "ctrl+d"]);
+    Mousetrap.unbind(["=", "a", "s", "h", "l", "j", "k", "ctrl+d"]);
     Mousetrap.bind("esc", _returnFalse(close));
     Mousetrap.bind("ctrl+d", _returnFalse(deleteForm));
 }
@@ -225,14 +255,15 @@ function fillLines() {
     });
 }
 
-function formatDuration(duration) {
+function formatDuration(duration, strip) {
+    if (strip === undefined) strip = true;
     var hours = parseInt(duration / 3600);
     var minutes = parseInt(duration / 60) % 60;
     var seconds = duration % 60;
 
     var result = ((hours < 10 ? "0" + hours : hours) + ":" +
             (minutes < 10 ? "0" + minutes : minutes));
-    if (seconds) {
+    if (seconds || !strip) {
         result += ":" + (seconds < 10 ? "0" + seconds : seconds);
     }
     return result;
@@ -323,9 +354,31 @@ function selectLine(direction) {
     }
 }
 
-function add() {
-    setForm();
+function start() {
+    localStorage.setItem('counter', new Date().valueOf());
+    refreshCounter();
+}
+
+function add(duration) {
+    if (typeof duration != 'string') {
+        duration = null;
+    }
+    setForm(null, duration);
     switchForm();
+}
+
+function stop() {
+    var duration = counterDuration();
+    localStorage.removeItem('counter');
+    add(formatDuration(duration));
+}
+
+function toggleCounter() {
+    if (counterDuration() !== null) {
+        stop();
+    } else {
+        start();
+    }
 }
 
 function setForm(id, duration, work, description) {

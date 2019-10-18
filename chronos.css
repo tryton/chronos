@@ -11,6 +11,7 @@
 
 body {
     padding-top: 50px;
+    padding-bottom: 90px;
 }
 
 .navbar {
@@ -50,6 +51,14 @@ body {
     white-space: nowrap;
 }
 
+#counter {
+    background-color: #f5f5f5;
+    display: flex;
+    font-size: 32px;
+    justify-content: space-between;
+    padding: 20px;
+}
+
 .btn-circle {
     border-radius: 15px;
     font-size: 12px;
@@ -69,18 +78,21 @@ body {
     width: 50px;
 }
 
-.btn-circle.btn-xl {
-    border-radius: 35px;
-    font-size: 24px;
-    height: 70px;
-    line-height: 1.33;
-    padding: 10px 16px;
-    width: 70px;
+.fixed-bottom {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
 }
 
-.fixed-bottom {
+.fixed-bottom-right {
+    bottom: 20px;
     position: fixed;
     right: 20px;
+}
+
+.fixed-bottom-left {
     bottom: 20px;
-    left: unset;
+    left: 20px;
+    position: fixed;
 }
