@@ -242,6 +242,9 @@ function fillLines() {
                 'class': 'description',
                 'headers': 'description',
             }).appendTo(tr);
+            if (this.uuid) {
+                tr.data('uuid', this.uuid);
+            }
 
             var duration_formated = formatDuration(this.duration);
             time.text(duration_formated);
@@ -324,7 +327,7 @@ function editLine() {
     var duration = tr.find('time').attr('datetime');
     var work = tr.find('.work').attr('work');
     var description = tr.find('.description').text();
-    setForm(id, duration, work, description);
+    setForm(id, duration, work, description, tr.data('uuid'));
     switchForm();
 }
 
@@ -383,10 +386,11 @@ function toggleCounter() {
     }
 }
 
-function setForm(id, duration, work, description) {
+function setForm(id, duration, work, description, uuid) {
     formDate.text(date.text());
     formDate.attr('datetime', date.attr('datetime'));
     inputId.val(id);
+    inputId.data('uuid', uuid);
     inputDuration.val(duration);
     selectWork.selectpicker('val', work || '');
     inputDescription.val(description);
@@ -419,6 +423,7 @@ function save(evt) {
 
     var date = formDate.attr('datetime');
     var id = parseInt(inputId.val());
+    var uuid = inputId.data('uuid');
     var duration = parseDuration(inputDuration.val());
     var work = parseInt(selectWork.val());
     var work_name = selectWork.find('option:selected').text();
@@ -438,7 +443,8 @@ function save(evt) {
         'duration': duration,
         'work': work,
         'work.name': work_name,
-        'description': description
+        'description': description,
+        'uuid': uuid,
     };
     sendMessage(['update line', date, id, values], function() {
         fillLines();

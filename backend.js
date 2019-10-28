@@ -224,7 +224,8 @@ function updateLine(date, id, values) {
     var min = 0;
     for (var i = 0; i < lines.length; i++) {
         line = lines[i];
-        if (line.id === id) {
+        if ((line.id === id) ||
+            (values.uuid && (line.uuid === values.uuid))) {
             jQuery.extend(line, values);
             break;
         }
