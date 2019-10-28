@@ -219,8 +219,12 @@ function todayDate() {
 
 function fillLines() {
     bodyLines.children().remove();
-    var message = ['lines', date.attr('datetime')];
+    var datetime = date.attr('datetime');
+    var message = ['lines', datetime];
     sendMessage(message, function(lines) {
+        if (datetime !== date.attr('datetime')) {
+            return;
+        }
         var total = 0;
         jQuery.each(lines, function() {
             if (this.deleted) {
