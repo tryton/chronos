@@ -17,6 +17,8 @@ zip -r chronos.zip \
     bower_components/bootstrap/dist/js/bootstrap.js \
     bower_components/bootstrap/dist/css/bootstrap.css \
     bower_components/bootstrap/dist/fonts/ \
+    bower_components/bootstrap-select/dist/css/bootstrap-select.css \
+    bower_components/bootstrap-select/dist/js/bootstrap-select.js \
     bower_components/jquery/LICENSE.txt \
     bower_components/jquery/dist/jquery.js \
     bower_components/mousetrap/LICENSE  \
