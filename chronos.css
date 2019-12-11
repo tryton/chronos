@@ -11,7 +11,7 @@
 
 body {
     padding-top: 50px;
-    padding-bottom: 90px;
+    overflow-x: hidden;
 }
 
 .navbar {
@@ -29,6 +29,7 @@ body {
 }
 
 #lines {
+    margin-bottom: 90px;
     table-layout: fixed;
 }
 
